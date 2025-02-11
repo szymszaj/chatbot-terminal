@@ -23,7 +23,21 @@ function formatResponse(response) {
   return uniqueSentences;
 }
 
+function showThinkingAnimation() {
+  let dots = "";
+  const interval = setInterval(() => {
+    dots += ".";
+    process.stdout.write(`🤖 Bot is thinking${dots}\r`);
+    if (dots.length > 3) {
+      dots = "";
+    }
+  }, 500);
+  return interval;
+}
+
 async function askAI(question) {
+  const thinkingInterval = showThinkingAnimation();
+
   try {
     const result = await hf.textGeneration({
       model: "EleutherAI/gpt-neo-2.7B",
@@ -31,9 +45,12 @@ async function askAI(question) {
       parameters: { max_new_tokens: 100 },
     });
 
+    clearInterval(thinkingInterval);
+
     const formattedText = formatResponse(result);
     console.log("\n🤖 Bot:", formattedText, "\n");
   } catch (error) {
+    clearInterval(thinkingInterval);
     console.error("⚠️ Błąd:", error);
   }
 }
