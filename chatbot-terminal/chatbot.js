@@ -1,3 +1,5 @@
+//TODO: install const chalk = require('chalk');
+
 require("dotenv").config();
 const { HfInference } = require("@huggingface/inference");
 const readline = require("readline");
