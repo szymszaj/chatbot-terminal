@@ -12,15 +12,11 @@ const rl = readline.createInterface({
 function formatResponse(response) {
   let text = response.generated_text.trim();
 
-  if (text.toLowerCase().includes("ty:")) {
-    text = text.split("\n").slice(1).join("\n").trim();
-  }
-
   const sentences = text.split(". ");
+  const uniqueSentences = [...new Set(sentences)];
+  text = uniqueSentences.join(". ");
 
-  const uniqueSentences = [...new Set(sentences)].join(". ");
-
-  return uniqueSentences;
+  return text;
 }
 
 function showThinkingAnimation() {
@@ -39,9 +35,10 @@ async function askAI(question) {
   const thinkingInterval = showThinkingAnimation();
 
   try {
+    const languageHint = "Please respond in English: ";
     const result = await hf.textGeneration({
       model: "EleutherAI/gpt-neo-2.7B",
-      inputs: question,
+      inputs: `${languageHint} ${question}`,
       parameters: { max_new_tokens: 100 },
     });
 
@@ -56,9 +53,9 @@ async function askAI(question) {
 }
 
 function askQuestion() {
-  rl.question("\n💬 Ty: ", async (question) => {
-    if (question.toLowerCase() === "do widzenia") {
-      console.log("\n👋 Bot: Do zobaczenia!\n");
+  rl.question("\n💬 You: ", async (question) => {
+    if (question.toLowerCase() === "goodbye") {
+      console.log("\n👋 Bot: Goodbye!\n");
       rl.close();
     } else {
       await askAI(question);
@@ -67,5 +64,5 @@ function askQuestion() {
   });
 }
 
-console.log("🤖 Witaj! Możesz zadawać pytania.\n");
+console.log("🤖 Welcome! You can ask questions now.\n");
 askQuestion();
