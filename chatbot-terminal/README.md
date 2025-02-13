@@ -20,6 +20,11 @@ Chatbot Terminal is a simple chatbot that runs in the terminal and responds to u
 1. **Clone the repository**
 
    cd chatbot-terminal
-   ```
 
-   ```
+## Install dependencies
+
+npm install
+
+## Create a .env file
+
+HUGGINGFACE_API_KEY=your_api_key
